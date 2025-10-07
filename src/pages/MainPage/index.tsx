@@ -1,8 +1,9 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography, useMediaQuery } from "@mui/material";
 import { styles } from "./style";
 import { data } from "../../constants";
 import { generateArray } from "../../utils/generateArray";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const MainPage = () => {
   const arr = useMemo(() => generateArray(), []);
@@ -11,6 +12,18 @@ const MainPage = () => {
   );
   const [flipped, setFlipped] = useState<number[]>([]);
   const [score, setScore] = useState<number>(0);
+  const [matchedPairs, setMatchedPairs] = useState<number[]>([]);
+
+  const navigate = useNavigate();
+  const isMobile = useMediaQuery("(max-width:515px)");
+
+  useEffect(() => {
+    const totalPossiblePairs = Math.floor(arr.length / 2);
+
+    if (matchedPairs.length === totalPossiblePairs) {
+      navigate("/results", { state: { score } });
+    }
+  }, [matchedPairs, arr.length]);
 
   const handleClick = (index: number) => {
     if (visibleCards[index] || flipped.length === 2) return;
@@ -28,6 +41,7 @@ const MainPage = () => {
       const secondId = arr[secondIndex];
 
       if (firstId === secondId) {
+        setMatchedPairs((prev) => [...prev, firstId]);
         setScore((prev) => prev + 1);
         setFlipped([]);
       } else {
@@ -46,8 +60,11 @@ const MainPage = () => {
 
   return (
     <Box sx={styles.container}>
-      <Typography>Score {score}</Typography>
-      <Grid container spacing={1} columns={9} sx={styles.gridContainer}>
+      <Typography sx={styles.scoreContainer}>Score: {score}</Typography>
+      <Grid container spacing={1} columns={9}   sx={{
+    ...styles.gridContainer,
+    ...(isMobile && styles.gridContainerMobile),
+  }}>
         {arr.map((id, index) => {
           const item = data.find((d) => d.id === id);
           if (!item) return null;
@@ -59,18 +76,29 @@ const MainPage = () => {
               sx={styles.gridItem}
               onClick={() => handleClick(index)}
             >
-              {visibleCards[index] ? (
-                <img
-                  src={item.image}
-                  alt=""
-                  style={{
-                    width: "100%",
-                    height: "100%",
+              <Box sx={styles.flipContainer}>
+                <Box
+                  sx={{
+                    ...styles.flipper,
+                    ...(visibleCards[index] ? styles.flipped : {}),
                   }}
-                />
-              ) : (
-                <Box sx={{ height: "100px" }} />
-              )}
+                >
+                  <Box sx={styles.front}>
+                    <Box sx={styles.frontBox} />
+                  </Box>
+                  <Box sx={styles.back}>
+                    <img
+                      src={item.image}
+                      alt=""
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        padding: "8px",
+                      }}
+                    />
+                  </Box>
+                </Box>
+              </Box>
             </Grid>
           );
         })}

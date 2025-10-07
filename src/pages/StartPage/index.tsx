@@ -36,7 +36,7 @@ const StartPage = () => {
       <Typography variant="h3">
         IT Quest
       </Typography>
-      <Typography mb={1}>Enter your name:</Typography>
+      <Typography sx={styles.textContainer}>Enter your name:</Typography>
       <TextField
         value={name}
         onChange={handleChange}

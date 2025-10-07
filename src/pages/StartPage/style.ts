@@ -9,4 +9,8 @@ export const styles = createStyleMap(() => ({
     height: "100vh",
     gap: "16px",
   },
+
+  textContainer: {
+    fontSize: "20px",
+  },
 }));

@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import StartPage from "./pages/StartPage";
 import MainPage from "./pages/MainPage";
+import ResultsPage from "./pages/ResultsPage";
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<StartPage />} />
         <Route path="/main" element={<MainPage />} />
+        <Route path="/results" element={<ResultsPage />} />
       </Routes>
     </Router>
   );
