@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const api = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl: "/" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "https://example.com/api/" }),
   tagTypes: ["Leaderboard"],
   endpoints: (builder) => ({
     getLeaderboard: builder.query<{ name: string; score: number }[], void>({
